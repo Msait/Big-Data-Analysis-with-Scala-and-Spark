@@ -68,7 +68,7 @@ object WikipediaRanking {
   def makeIndex(langs: List[String], rdd: RDD[WikipediaArticle]): RDD[(String, Iterable[WikipediaArticle])] = {
     rdd.flatMap(article =>
       langs
-        .find(lang => article.mentionsLanguage(lang))
+        .filter(lang => article.mentionsLanguage(lang))
         .map(lang => (lang, article))
     ).groupByKey()
   }
@@ -96,7 +96,7 @@ object WikipediaRanking {
   def rankLangsReduceByKey(langs: List[String], rdd: RDD[WikipediaArticle]): List[(String, Int)] =
     rdd.flatMap(article =>
       langs
-        .find(lang => article.mentionsLanguage(lang))
+        .filter(lang => article.mentionsLanguage(lang))
         .map(lang => (lang, 1))
     ).reduceByKey(_ + _)
       .collect()
@@ -119,6 +119,7 @@ object WikipediaRanking {
 
     /* Output the speed of each ranking */
     println(timing)
+    println(langsRanked2)
     sc.stop()
   }
 
