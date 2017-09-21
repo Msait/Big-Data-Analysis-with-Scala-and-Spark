@@ -96,4 +96,25 @@ class StackOverflowSuite extends FunSuite with BeforeAndAfterAll {
     assert(scored.last._2 == 30, "Invalid last element score")
   }
 
+  test("test vectorPostings") {
+    assert(initStackOverflow(), "Can't instantiate a StackOverflow object")
+    import StackOverflow._
+
+    val scored = List(
+      (Posting(1, 6,   None, None, 140, Some("CSS")),  67),
+      (Posting(1, 42,  None, None, 155, Some("PHP")),  89),
+      (Posting(1, 72,  None, None, 16,  Some("Ruby")), 3),
+      (Posting(1, 126, None, None, 33,  Some("Java")), 30)
+    )
+
+    val vectors = testObject.vectorPostings(sc.parallelize(scored)).collect()
+//    CSS (8 * 50000, 67)
+//    PHP (3 * 50000, 89)
+//    Ruby (7 * 50000, 3)
+//    Java (2 * 50000, 30)
+    assert(vectors.head._1 == 7 * 50000)
+    assert(vectors.head._2 == 67)
+    assert(vectors.last._1 == 1 * 50000)
+    assert(vectors.last._2 == 30)
+  }
 }

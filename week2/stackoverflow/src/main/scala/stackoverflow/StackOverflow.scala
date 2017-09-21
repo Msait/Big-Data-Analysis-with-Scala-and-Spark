@@ -120,7 +120,13 @@ class StackOverflow extends Serializable {
       }
     }
 
-    ???
+    scored
+      .map(score => {
+        val maybeInt = firstLangInTag(score._1.tags, langs)
+        maybeInt match  {
+          case Some(i) => (i * langSpread, score._2)
+        }
+      })
   }
 
 
