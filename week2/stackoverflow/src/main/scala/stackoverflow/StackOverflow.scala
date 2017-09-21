@@ -94,14 +94,13 @@ class StackOverflow extends Serializable {
           var i = 0
           while (i < as.length) {
             val score = as(i).score
-                if (score > highScore)
-                  highScore = score
-                  i += 1
+            if (score > highScore)
+              highScore = score
+            i += 1
           }
       highScore
     }
-
-    ???
+    grouped.map(qidAndIter => (qidAndIter._2.head._1, answerHighScore(qidAndIter._2.map(iter => iter._2).toArray) ))
   }
 
 
