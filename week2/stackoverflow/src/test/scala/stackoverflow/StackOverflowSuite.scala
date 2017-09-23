@@ -77,7 +77,7 @@ class StackOverflowSuite extends FunSuite with BeforeAndAfterAll {
       (3, List(
         (Posting(1, 3, Option.empty, Option.empty, 4, Option("Ruby")), Posting(2, 7, Option.empty, Option(2), 3, Option.empty))
       )),
-      (2, List(
+      (4, List(
         (Posting(1, 4, Option.empty, Option.empty, 10, Option("Java")), Posting(2, 8, Option.empty, Option(2), 10, Option.empty)),
         (Posting(1, 4, Option.empty, Option.empty, 10, Option("Java")), Posting(2, 9, Option.empty, Option(2), 30, Option.empty)),
         (Posting(1, 4, Option.empty, Option.empty, 10, Option("Java")), Posting(2, 10, Option.empty, Option(2), 15, Option.empty))
@@ -90,10 +90,12 @@ class StackOverflowSuite extends FunSuite with BeforeAndAfterAll {
 //    ((1, 72,  None, None, 16,  Some(Ruby)), 3)
 //    ((1, 126, None, None, 33,  Some(Java)), 30)
     assert(scored.length == 4, "Invalid number of scored questions")
-    assert(scored.head._1.id == 1, "Invalid first scored element id")
-    assert(scored.head._2 == 67, "Invalid first element score")
-    assert(scored.last._1.id == 4, "Invalid last scored element id")
-    assert(scored.last._2 == 30, "Invalid last element score")
+    val rubyLang = scored.find { case (question, highScore) => question.tags.contains("Ruby") }.get
+    assert(rubyLang._1.id == 3, "Invalid Ruby scored element id")
+    assert(rubyLang._2 == 3, "Invalid Ruby element score")
+    val javaLang = scored.find { case (question, highScore) => question.tags.contains("Java") }.get
+    assert(javaLang._1.id == 4, "Invalid last scored element id")
+    assert(javaLang._2 == 30, "Invalid last element score")
   }
 
   test("test vectorPostings") {
